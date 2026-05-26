@@ -47,16 +47,20 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',       // modelo gratuito y rápido
+      model: 'models/gemini-flash-latest',       // modelo gratuito y rápido
       systemInstruction: SYSTEM_PROMPT,
     });
 
     // Gemini usa "model" en lugar de "assistant" para los mensajes del bot
     // y espera el historial sin el último mensaje (ese se manda aparte)
-    const history = messages.slice(0, -1).map(m => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
+    // DESPUÉS — filtra el primer mensaje si es del bot
+const history = messages
+  .slice(0, -1)
+  .filter((m, i) => !(i === 0 && m.role === 'assistant'))  // ← saca el saludo inicial
+  .map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }],
+  }));
 
     const lastMessage = messages.at(-1).content;
 
