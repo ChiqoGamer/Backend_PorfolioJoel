@@ -48,7 +48,7 @@ app.post('/api/chat', async (req, res) => {
   try {
     const model = genAI.getGenerativeModel({
       /* model: 'models/gemini-flash-latest',       // modelo gratuito y rápido */
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       systemInstruction: SYSTEM_PROMPT,
     });
 
